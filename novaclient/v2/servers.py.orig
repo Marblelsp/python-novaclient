@@ -394,7 +394,7 @@ class Server(base.Resource):
         """
         return self.manager.create_image(self, image_name, metadata)
 
-    def backup(self, backup_name, backup_type, rotation, metadata=None):
+    def backup(self, backup_name, backup_type, rotation):
         """
         Backup a server instance.
 
@@ -404,8 +404,7 @@ class Server(base.Resource):
                         keep around.
         :returns: An instance of novaclient.base.TupleWithMeta
         """
-        return self.manager.backup(self, backup_name, backup_type, rotation,
-                                   metadata)
+        return self.manager.backup(self, backup_name, backup_type, rotation)
 
     def confirm_resize(self):
         """
@@ -1743,8 +1742,7 @@ class ServerManager(base.BootingManagerWithFind):
             image_uuid = location.split('/')[-1]
         return base.StrWithMeta(image_uuid, resp)
 
-    def backup(self, server, backup_name, backup_type, rotation,
-               metadata=None):
+    def backup(self, server, backup_name, backup_type, rotation):
         """
         Backup a server instance.
 
@@ -1758,8 +1756,7 @@ class ServerManager(base.BootingManagerWithFind):
         """
         body = {'name': backup_name,
                 'backup_type': backup_type,
-                'rotation': rotation,
-                'metadata': metadata or {}}
+                'rotation': rotation}
         return self._action('createBackup', server, body)
 
     def set_meta(self, server, metadata):
